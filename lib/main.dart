@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_ui/view/home/bottom_bar/bottom_navigation_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pokemon_ui/view/sign_up/sign_up_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
-          home: MainNavigation(),
+          home: SignUpScreen(),
         );
       },
     );

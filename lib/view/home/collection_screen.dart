@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pokemon_ui/res/app_assets.dart';
 import 'package:pokemon_ui/res/app_colors.dart';
 
 class CollectionsScreen extends StatelessWidget {
@@ -11,6 +10,7 @@ class CollectionsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
