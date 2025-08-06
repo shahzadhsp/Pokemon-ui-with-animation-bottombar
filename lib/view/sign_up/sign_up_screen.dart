@@ -1,8 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:pokemon_ui/controllers/sign_up_controller.dart';
 import 'package:pokemon_ui/res/app_colors.dart';
 import 'package:pokemon_ui/view/sign_in/sign_in_screen.dart';
 
@@ -14,66 +13,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  bool _obscurePassword = true;
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  File? _profileImage;
-  final picker = ImagePicker();
-
-  bool _isLoading = false;
-
-  Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 70,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
-    }
-  }
-
-  void _signUp() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // 🔧 Replace this logic with your own backend API or local storage logic
-      await Future.delayed(const Duration(seconds: 2)); // Simulate loading
-
-      // Just print or show snackbar for now
-      Get.snackbar(
-        'Success',
-        'Account created (locally or via API)!',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.black87,
-        colorText: Colors.white,
-      );
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()),
-      );
-    }
-  }
+  final controller = Get.put(SignUpController());
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
-            key: _formKey,
+            key: controller.formKey,
             child: Column(
               children: [
                 Align(
@@ -98,25 +38,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Profile Image Picker
-                // GestureDetector(
-                //   onTap: _pickImage,
-                //   child: CircleAvatar(
-                //     radius: 45,
-                //     backgroundColor: Colors.grey[300],
-                //     backgroundImage:
-                //         _profileImage != null
-                //             ? FileImage(_profileImage!)
-                //             : null,
-                //     child:
-                //         _profileImage == null
-                //             ? const Icon(Icons.add_a_photo, size: 28)
-                //             : null,
-                //   ),
-                // ),
+
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _firstNameController,
+                  controller: controller.firstNameController,
                   decoration: _inputDecoration("First Name"),
                   validator:
                       (value) =>
@@ -126,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  controller: _lastNameController,
+                  controller: controller.lastNameController,
                   decoration: _inputDecoration("Last Name"),
                   validator:
                       (value) =>
@@ -134,7 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  controller: _emailController,
+                  controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: _inputDecoration("Email"),
                   validator:
@@ -142,52 +67,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           value!.contains('@') ? null : 'Enter a valid email',
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: _inputDecoration("Password").copyWith(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: AppColors.primaryColor,
+                Obx(() {
+                  return TextFormField(
+                    controller: controller.passwordController,
+                    obscureText: controller.obscurePassword.value,
+                    decoration: _inputDecoration("Password").copyWith(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.obscurePassword.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.primaryColor,
+                        ),
+                        onPressed: controller.togglePasswordVisibility,
                       ),
-                      onPressed: _togglePasswordVisibility,
                     ),
-                  ),
-                  validator:
-                      (value) =>
-                          value != null && value.length < 6
-                              ? 'Password must be at least 6 characters'
-                              : null,
-                ),
+                    validator:
+                        (value) =>
+                            value != null && value.length < 6
+                                ? 'Password must be at least 6 characters'
+                                : null,
+                  );
+                }),
                 const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signUp,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                Obx(
+                  () => SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed:
+                          controller.isLoading.value
+                              ? null
+                              : () => controller.signUp(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                    child:
-                        _isLoading
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : Text(
-                              'Sign Up',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.whiteColor,
+                      child:
+                          controller.isLoading.value
+                              ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                              : Text(
+                                'Sign Up',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.whiteColor,
+                                ),
                               ),
-                            ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -210,7 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Sign in",
                         style: TextStyle(
                           color: AppColors.blackColor,

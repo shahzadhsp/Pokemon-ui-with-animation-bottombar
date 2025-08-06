@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:pokemon_ui/controllers/theme_controller.dart';
 import 'package:pokemon_ui/res/app_assets.dart';
 import 'package:pokemon_ui/res/app_colors.dart';
 import 'package:pokemon_ui/view/pokemon/for_sale_screen.dart';
@@ -25,6 +28,7 @@ class PokemonScreen extends StatefulWidget {
 }
 
 class _PokemonScreenState extends State<PokemonScreen> {
+  final _themeController = Get.put(ThemeController());
   final List<CardItem> items = [
     CardItem(
       imagePath: AppAssets.ninetaleIconPng,
@@ -92,9 +96,13 @@ class _PokemonScreenState extends State<PokemonScreen> {
                   children: [
                     Text(
                       'Sort by',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color:
+                            _themeController.isDarkMode
+                                ? Colors.white
+                                : Color(0xff2F4F2F),
                         fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
                       ),
                     ),
                     SizedBox(width: 6.w),
@@ -111,6 +119,10 @@ class _PokemonScreenState extends State<PokemonScreen> {
                         AppAssets.iosBottomIconPng,
                         height: 12.h,
                         width: 12.w,
+                        color:
+                            _themeController.isDarkMode
+                                ? AppColors.whiteColor
+                                : Color(0xff2F4F2F),
                       ),
                     ),
                   ],
@@ -127,7 +139,10 @@ class _PokemonScreenState extends State<PokemonScreen> {
                       Text(
                         'See all',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: AppColors.primaryColor,
+                          color:
+                              _themeController.isDarkMode
+                                  ? AppColors.whiteColor
+                                  : Color(0xff2F4F2F),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -145,6 +160,10 @@ class _PokemonScreenState extends State<PokemonScreen> {
                           AppAssets.iosBottomIconPng,
                           height: 12.h,
                           width: 12.w,
+                          color:
+                              _themeController.isDarkMode
+                                  ? AppColors.whiteColor
+                                  : Color(0xff2F4F2F),
                         ),
                       ),
                     ],
@@ -190,8 +209,12 @@ class _PokemonScreenState extends State<PokemonScreen> {
                                       backgroundColor: const Color(
                                         0xffE6DFBE,
                                       ).withValues(alpha: 0.33),
-                                      child: const Center(
-                                        child: Icon(Icons.add, size: 12),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 12,
+                                          color: AppColors.blackColor,
+                                        ),
                                       ),
                                     ),
                                     Text(
@@ -201,6 +224,7 @@ class _PokemonScreenState extends State<PokemonScreen> {
                                       ).textTheme.labelSmall!.copyWith(
                                         fontSize: 8,
                                         fontFamily: 'Poppins',
+                                        color: AppColors.blackColor,
                                       ),
                                     ),
                                   ],
@@ -214,6 +238,7 @@ class _PokemonScreenState extends State<PokemonScreen> {
                                     fontFamily: 'Poppins',
                                     decoration: TextDecoration.underline,
                                     decorationThickness: 2,
+                                    color: AppColors.blackColor,
                                   ),
                                 ),
                               ],
@@ -249,10 +274,11 @@ class _PokemonScreenState extends State<PokemonScreen> {
                                           children: [
                                             Text(
                                               item.title,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 10,
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w600,
+                                                color: AppColors.blackColor,
                                               ),
                                             ),
                                             Text(
@@ -261,6 +287,7 @@ class _PokemonScreenState extends State<PokemonScreen> {
                                                 fontSize: 10,
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w400,
+                                                color: AppColors.blackColor,
                                               ),
                                             ),
                                           ],

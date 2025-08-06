@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:pokemon_ui/controllers/theme_controller.dart';
 import 'package:pokemon_ui/models/inventory_model.dart';
-import 'package:pokemon_ui/res/app_assets.dart';
 import 'package:pokemon_ui/res/app_colors.dart';
 import 'package:pokemon_ui/view/widgets/custom_appbar.dart';
 
@@ -12,6 +14,7 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+  final _themeController = Get.put(ThemeController());
   List<InventoryModel> items = [
     InventoryModel(name: 'Potion', type: 'Health', value: 256.00, quantity: 5),
     InventoryModel(
@@ -47,7 +50,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       'Total Cards:',
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontFamily: 'Inter',
-                        color: AppColors.primaryColor,
+                        color:
+                            _themeController.isDarkMode
+                                ? Colors.white
+                                : AppColors.primaryColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -63,8 +69,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                       child: Text(
                         '132',
-                        style: Theme.of(context).textTheme.labelMedium!
-                            .copyWith(fontWeight: FontWeight.w400),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelMedium!.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color:
+                              _themeController.isDarkMode
+                                  ? Colors.white
+                                  : AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ],
@@ -78,7 +91,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       'Value',
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontFamily: 'Inter',
-                        color: AppColors.primaryColor,
+                        color:
+                            _themeController.isDarkMode
+                                ? Colors.white
+                                : AppColors.primaryColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -94,8 +110,15 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       ),
                       child: Text(
                         '\$256.00',
-                        style: Theme.of(context).textTheme.labelMedium!
-                            .copyWith(fontWeight: FontWeight.w400),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelMedium!.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color:
+                              _themeController.isDarkMode
+                                  ? Colors.white
+                                  : AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ],
@@ -175,6 +198,7 @@ class CardInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _themeController = Get.put(ThemeController());
     return Row(
       children: [
         Text(
@@ -194,9 +218,13 @@ class CardInfoRow extends StatelessWidget {
           ),
           child: Text(
             value,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w400),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w400,
+              color:
+                  _themeController.isDarkMode
+                      ? AppColors.whiteColor
+                      : AppColors.blackColor,
+            ),
           ),
         ),
       ],

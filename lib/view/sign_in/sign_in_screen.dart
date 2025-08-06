@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:pokemon_ui/controllers/sign_in_controller.dart';
 import 'package:pokemon_ui/res/app_colors.dart';
-import 'package:pokemon_ui/view/home/bottom_bar/bottom_navigation_bar.dart';
+import 'package:pokemon_ui/view/forget/forget_screen.dart';
 import 'package:pokemon_ui/view/sign_up/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -11,49 +13,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool _isLoading = false;
-  bool _obscurePassword = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  Future<void> _signIn() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Simulate dummy sign-in (you can replace this with your logic)
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (_emailController.text == 'rana@gmail.com' &&
-          _passwordController.text == '12345678') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Logged in successfully!')),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MainNavigation()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid email or password')),
-        );
-      }
-
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+  final controller = Get.put(SignInController(), tag: UniqueKey().toString());
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
-            key: _formKey,
+            key: controller.formKey,
             child: Column(
               children: [
                 const Text(
@@ -76,7 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 30),
                 TextFormField(
-                  controller: _emailController,
+                  controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: _inputDecoration("Email"),
                   validator:
@@ -84,70 +44,77 @@ class _SignInScreenState extends State<SignInScreen> {
                           value!.contains('@') ? null : 'Enter a valid email',
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: _inputDecoration("Password").copyWith(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: AppColors.primaryColor,
+                Obx(() {
+                  return TextFormField(
+                    controller: controller.passwordController,
+                    obscureText: controller.obscurePassword.value,
+                    decoration: _inputDecoration("Password").copyWith(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.obscurePassword.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.primaryColor,
+                        ),
+                        onPressed: controller.togglePasswordVisibility,
                       ),
-                      onPressed: _togglePasswordVisibility,
                     ),
-                  ),
-                  validator:
-                      (value) =>
-                          value != null && value.length < 6
-                              ? 'Password must be at least 6 characters'
-                              : null,
-                ),
+                    validator:
+                        (value) =>
+                            value != null && value.length < 6
+                                ? 'Password must be at least 6 characters'
+                                : null,
+                  );
+                }),
                 SizedBox(height: 8.h),
                 Align(
                   alignment: Alignment.topRight,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ForgotPasswordScreen(),
+                        ),
+                      );
+                    },
                     child: const Text('Forgot Password'),
                   ),
                 ),
                 const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    // onPressed: _isLoading ? null : _signIn,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MainNavigation(),
+                Obx(() {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed:
+                          controller.isLoading.value
+                              ? null
+                              : () => controller.signIn(context),
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    child:
-                        _isLoading
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : Text(
-                              'Sign In',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w500,
+                      child:
+                          controller.isLoading.value
+                              ? const CircularProgressIndicator(
                                 color: Colors.white,
+                              )
+                              : Text(
+                                'Sign In',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                  ),
-                ),
+                    ),
+                  );
+                }),
                 SizedBox(height: 8.h),
                 const SizedBox(height: 20),
                 Column(
@@ -163,7 +130,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Sign Up",
                         style: TextStyle(
                           color: AppColors.blackColor,

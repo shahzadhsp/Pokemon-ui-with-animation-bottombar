@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "513997326238",
+    "project_id": "pokemon-d61b7",
+    "storage_bucket": "pokemon-d61b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513997326238:android:8bf33aeb0bed1a3b18788f",
+        "android_client_info": {
+          "package_name": "com.example.pokemon_ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo1Q9LtIE4nmt0hjmcNXOrTOSz21ea514"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

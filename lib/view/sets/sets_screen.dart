@@ -23,48 +23,44 @@ class _SetsScreenState extends State<SetsScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: const CustomAppBar(title: 'Sets'),
-      body: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: ListView.builder(
-            itemCount: 4,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12,
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: ListView.builder(
+          itemCount: 4,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12,
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+                decoration: BoxDecoration(
+                  color: AppColors.containerColor,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: AppColors.primaryColor),
                 ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 14.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.containerColor,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: AppColors.primaryColor),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        setsList[index],
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      setsList[index],
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.blackColor,
                       ),
-                      Image.asset(
-                        AppAssets.iosForwardIconPng,
-                        height: 20.h,
-                        width: 20.w,
-                      ),
-                    ],
-                  ),
+                    ),
+                    Image.asset(
+                      AppAssets.iosForwardIconPng,
+                      height: 20.h,
+                      width: 20.w,
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
